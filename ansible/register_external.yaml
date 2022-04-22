@@ -1,0 +1,4 @@
+- name: Register worker
+  when: "'workers' in group_names"
+  ansible.builtin.command:
+    cmd: "hubctl worker register --nogetcafromserver {{ hostvars[play_hosts[0]]['private_name'] }}"

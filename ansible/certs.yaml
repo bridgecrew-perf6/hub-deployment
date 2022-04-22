@@ -1,0 +1,72 @@
+- name: Generate CSRs
+  ansible.builtin.command: /usr/local/bin/hubctl generate csr
+- name: Pull CSRs and keys
+  ansible.builtin.fetch:
+    src: "/opt/worldprogramming/wpshub-c/var/ca/public/{{ item }}"
+    dest: "csrs/{{ private_name}}/{{ item }}"
+    flat: true
+  loop:
+    - wps/Server.csr.pem
+    - wps/Server.key.pem
+    - nomad/ServerClient.csr.pem
+    - nomad/ServerClient.key.pem
+- name: Sign CSRs
+  local_action:
+    module: community.crypto.x509_certificate
+    provider: ownca
+    ownca_path: ./ca.pem
+    ownca_privatekey_path: ./ca.key
+    ownca_privatekey_passphrase: "{{ secret_ca_passphrase }}"
+    ownca_not_after: +365d  # valid for one year
+    ownca_not_before: "-1d"  # valid since yesterday
+    csr_path: "csrs/{{ private_name }}/{{ item }}.csr.pem"
+    path: "csrs/{{ private_name }}/{{ item }}.cert.pem"
+    privatekey_path: "csrs/{{ private_name }}/{{ item }}.key.pem"
+  loop:
+    - wps/Server
+    - nomad/ServerClient
+  when: ca_certs == "selfsigned"
+- name: Pause for manual CSR signing
+  ansible.builtin.pause:
+    prompt: Please sign the CSRs in the csrs directory and create fullchain cert.pem files as per https://hubdoc.worldprogramming.com/ and then press ctrl-c
+  when: ca_certs == "supplied"
+  run_once: true
+- name: Push Certs
+  ansible.builtin.copy:
+    dest: "/opt/worldprogramming/wpshub-c/var/ca/public/{{ item }}"
+    src: "csrs/{{ private_name }}/{{ item }}"
+    mode: 0644
+    owner: wpshub.casvc
+    group: wpshub-c
+  loop:
+    - wps/Server.cert.pem
+    - nomad/ServerClient.cert.pem
+  when: ca_certs == "supplied" or ca_certs == "selfsigned"
+- name: Push CA
+  ansible.builtin.copy:
+    dest: /opt/worldprogramming/wpshub-c/var/ca/public/CA.cert.pem
+    src: ./ca.pem
+    mode: 0644
+    owner: wpshub.casvc
+    group: wpshub-c
+  when: ca_certs == "supplied" or ca_certs == "selfsigned"
+- name: Copy internal ingress custom for private CA
+  ansible.builtin.copy:
+    src: "templates/internalingress_privateca.yaml"
+    dest: "/opt/worldprogramming/wpshub-c/etc/config.d/internalingress_custom.yaml"
+  when: ca_certs == "selfsigned"
+- name: Copy internal ingress custom for public CA
+  ansible.builtin.copy:
+    src: "templates/internalingress_publicca.yaml"
+    dest: "/opt/worldprogramming/wpshub-c/etc/config.d/internalingress_custom.yaml"
+  when: ca_certs == "supplied"
+- name: Copy CA
+  when: "'workers' in group_names"
+  ansible.builtin.copy:
+    remote_src: yes
+    src: /opt/worldprogramming/wpshub-c/var/ca/public/CA.cert.pem
+    dest: /etc/pki/ca-trust/source/anchors
+- name: Update ca-trust
+  when: "'workers' in group_names"
+  ansible.builtin.command:
+    cmd: update-ca-trust force-enable && update-ca-trust extract

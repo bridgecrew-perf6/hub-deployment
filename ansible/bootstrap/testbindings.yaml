@@ -1,0 +1,4 @@
+roleBindings:
+  - role: InvokeAnyDeploymentUser
+    groups:
+    - InvocationPortalUsers

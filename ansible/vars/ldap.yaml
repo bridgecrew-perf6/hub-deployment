@@ -1,0 +1,7 @@
+ldap_displayname: Test (LDAP)
+ldap_domain: test.local
+ldap_hostport: ldap.test.local:3268
+ldap_search_base: dc=test,dc=local
+ldap_bind_dn: CN=Readonly AD LDAP Access,OU=Special,OU=Ancillary,OU=Users,DC=test,DC=local
+ldap_authtok: secr1tPa55
+ldap_users_dn: ou=Users

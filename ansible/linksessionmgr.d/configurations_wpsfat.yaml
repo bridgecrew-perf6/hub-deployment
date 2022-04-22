@@ -1,0 +1,3 @@
+configurations:
+  WPSFatLatest:
+    description: WPS taken from wpsfat:latest docker image

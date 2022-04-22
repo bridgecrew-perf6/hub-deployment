@@ -1,0 +1,53 @@
+- hosts: all
+  become: yes
+  vars_files:
+    - vars/ldap.yaml
+    - vars/common.yaml
+  vars:
+    wps_rpm: "wps-4.4.1.0.5212_ga_prerelease-1.x86_64.rpm"
+    worker_rpm: "wpshub-worker"
+    hub_rpm: "wpshub"
+    bootstrap_params: "{{ '--nointernaltls' if ca_certs != 'internal' else ''}}"
+  tasks:
+  - name: Common tasks
+    ansible.builtin.include_tasks: reachable.yaml
+  - name: Update
+    ansible.builtin.include_tasks: update.yaml
+  - name: Common
+    ansible.builtin.include_tasks: common.yaml
+  - name: User setup
+    ansible.builtin.include_tasks: users.yaml
+  - name: RPM setup
+    when: rpm_source == "airgapped"
+    ansible.builtin.include_tasks: rpms_airgap.yaml
+  - name: RPM setup
+    when: rpm_source != "airgapped"
+    ansible.builtin.include_tasks: rpms_internet.yaml
+  - name: Shared Store setup
+    when: shared_store_ip is defined
+    ansible.builtin.include_tasks: sharedstore.yaml
+  - name: Create CA for selfsigned
+    when: "ca_certs == 'selfsigned'"
+    ansible.builtin.include_tasks: createca.yaml
+    run_once: true
+  - name: Hub init
+    ansible.builtin.include_tasks: hub_init.yaml
+    when: "'hub' in group_names"
+  - name: Worker init
+    ansible.builtin.include_tasks: worker_init.yaml
+    when: "'workers' in group_names"
+  - name: Handle certificates
+    ansible.builtin.include_tasks: certs.yaml
+    when: "ca_certs != 'internal'"
+  - name: Hub run
+    ansible.builtin.include_tasks: hub_run.yaml
+    when: "'hub' in group_names"
+  - name: Worker run
+    ansible.builtin.include_tasks: worker_run.yaml
+    when: "'workers' in group_names"
+  - name: Register workers with internal TLS
+    ansible.builtin.include_tasks: register_internal.yaml
+    when: "ca_certs == 'internal'"
+  - name: Register workers with supplied certs
+    ansible.builtin.include_tasks: register_external.yaml
+    when: "ca_certs != 'internal' and 'workers' in group_names"

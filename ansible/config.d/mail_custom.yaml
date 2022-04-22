@@ -1,0 +1,3 @@
+mail:
+  smtpServer: telly.teamwpc.local:25
+  fromEmail: noreply@worldprogramming.com

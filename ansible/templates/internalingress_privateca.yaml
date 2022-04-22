@@ -1,0 +1,3 @@
+internalingress:
+  tls:
+    enabled: true

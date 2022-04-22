@@ -1,0 +1,36 @@
+- name: Installing the worker rpm files
+  yum:
+    name: ["{{ worker_rpm }}", 'wps-4']
+    state: latest
+    update_cache: true
+- name: Copy WPS license
+  ansible.builtin.copy:
+    src: "license/setinit.wps"
+    dest: "/tmp"
+- name: License WPS
+  ansible.builtin.command:
+    cmd: /opt/worldprogramming/wps-4/bin/wps -setinit /tmp/setinit.wps
+    creates: /var/lib/worldprogramming/WPS/4/setinit.dat
+- name: Copy wps install information
+  ansible.builtin.copy:
+    src: "worker.config/wps_installs.yaml"
+    dest: "/opt/worldprogramming/wpshub-c/etc/wps_installs.yaml"
+- name: Copy nomad config
+  ansible.builtin.copy:
+    src: "worker.config/90-gc-config.hcl"
+    dest: "/opt/worldprogramming/wpshub-c/etc/nomad.d/90-gc-config.hcl"
+- name: Create network config
+  ansible.builtin.template:
+    src: internalnetwork_custom.yaml.j2
+    dest: /opt/worldprogramming/wpshub-c/etc/config.d/internalnetwork_custom.yaml
+    mode: 0644
+- name: Create hubctl symlink
+  ansible.builtin.file:
+    src: /opt/worldprogramming/wpshub-c/bin/hubctl
+    dest: /usr/local/bin/hubctl
+    owner: root
+    group: root
+    state: link
+- name: Generate CSRs
+  ansible.builtin.command: /usr/local/bin/hubctl generate csr
+  when: ca_certs == "supplied" or ca_certs == "selfsigned"

@@ -1,0 +1,20 @@
+- name: Generate worker token
+  ansible.builtin.command: bash -c "/usr/local/bin/hubctl worker add | grep hubctl"
+  when: "'hub' in group_names"
+  register: "workerreg"
+  loop: "{{ groups['workers'] }}" 
+- name: Store as fact
+  when: "'hub' in group_names"
+  set_fact: workerregs="{{ workerreg }}"
+# - debug: var=hostvars[inventory_hostname]
+# - name: Debug workers
+#   when: 'inventory_hostname != play_hosts[0] and inventory_hostname == item.item'
+#   ansible.builtin.debug: #[0]['stdout_lines'][0]
+#     msg: "{{ item.stdout }}"
+#   with_items: "{{ hostvars[play_hosts[0]]['workerregs']['results'] }}"
+- name: Register worker
+  when: "'workers' in group_names and inventory_hostname == item.item"
+  ansible.builtin.command:
+    cmd: "{{ item.stdout }}"
+    creates: /opt/worldprogramming/wpshub-c/var/ca/public/CA.cert.pem
+  with_items: "{{ hostvars[play_hosts[0]]['workerregs']['results'] }}"

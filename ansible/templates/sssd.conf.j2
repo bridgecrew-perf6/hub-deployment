@@ -1,0 +1,21 @@
+[sssd]
+domains = {{ldap_domain}}
+services = nss, pam
+
+[domain/{{ldap_domain}}]
+id_provider = ldap
+auth_provider = ldap
+chpass_provider = ldap
+
+min_id = 1000
+
+ldap_uri = ldap://{{ldap_hostport}}
+ldap_schema = ad
+ldap_id_mapping = true
+ldap_search_base = {{ldap_search_base}}
+ldap_id_use_start_tls = true
+ldap_tls_reqcert = allow
+ldap_default_bind_dn = {{ldap_bind_dn}}
+ldap_default_authtok_type = password
+ldap_default_authtok = {{ldap_authtok}}
+fallback_homedir = /home/%u

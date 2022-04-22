@@ -1,0 +1,13 @@
+auth:
+  ldap:
+    enabled: true
+    displayName: {{ldap_displayname}}
+    host: {{ldap_hostport}}
+    insecureNoSSL: true
+    bindDN: {{ldap_bind_dn}}
+    bindPassword: {{ldap_authtok | b64encode}}
+    bindPasswordEncoding: base64
+    schema: Active Directory
+    searchBase: {{ldap_search_base}}
+    usersDN: {{ldap_users_dn}}
+    uidNumberDerivation: sssd

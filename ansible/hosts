@@ -1,0 +1,18 @@
+[all:vars]
+ingress_url = https://hub.test.wpscloud.co.uk
+shared_store_ip = 172.17.2.31
+db_host = test-hub-db.calypti53pcp.eu-west-2.rds.amazonaws.com
+db_name = testhub
+db_user = hubdb
+db_password = shadjg789s56ad89hjklasdfgbhjkl
+s3_endpoint = s3.amazonaws.com
+s3_accessKeyId = AKIAVSPH6VO2LIRVLN6J
+s3_secretAccessKey = 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
+s3_bucket = test-hubdata20220422081154242800000002
+s3_region = eu-west-2
+
+[hub]
+18.168.204.41 ansible_user=ec2-user private_name=hubvm.test.wpscloud.co.uk
+
+[workers]
+13.41.64.169 ansible_user=ec2-user private_name=worker0.test.wpscloud.co.uk

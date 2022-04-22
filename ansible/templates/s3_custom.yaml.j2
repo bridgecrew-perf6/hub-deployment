@@ -1,0 +1,25 @@
+# Common configuration settings related to
+# defining the connection to an S3 compatible
+# object store
+s3:
+  # The S3 endpoint to connect to.
+  endpoint: {{ s3_endpoint }}
+
+  # The AWS Access Key ID to use to authenticate the connection
+  accessKeyId: {{ s3_accessKeyId }}
+
+  # The AWS Secret Access Key to use to authenticate the connection
+  secretAccessKey: {{ s3_secretAccessKey }}
+
+  # The AWS Session Token to use to authenticate the connection
+  token:
+
+  # The bucket name in which Hub will store
+  # its objects
+  bucketName: {{ s3_bucket }}
+
+  region: {{ s3_region }}
+
+  # Whether to connect insecurely. By default, a secure connection
+  # is made.
+  insecure: false

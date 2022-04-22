@@ -529,3 +529,5 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform,ansible,emacs,vim,visualstudio,visualstudiocode
 
+**/.terraform.lock.hcl
+terraform/*/hosts

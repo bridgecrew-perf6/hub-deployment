@@ -1,0 +1,6 @@
+internalingress:
+  tls:
+    enabled: true
+    rootCaFile:
+      private: false
+      path: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem

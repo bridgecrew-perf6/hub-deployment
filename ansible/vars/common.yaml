@@ -1,0 +1,24 @@
+# ingress_url: URL to access the hub. Set this to any reverse proxy or loadbalancer in front of the hub. This should be a full URL.
+# shared_store_ip: If you set this we will expect to find an NFS server to mount onto all the nodes at this IP address.
+# db_host: Host name for postgresql server
+# db_name: Database name for database on postgresql server
+# db_user: User name for postgresql server
+# db_password: Password for user on postgresql server
+# s3_endpoint: Host name for s3 server for the hub
+# s3_accessKeyId: Access key for s3
+# s3_secretAccessKey: Secret for s3
+# s3_bucket: Bucket in s3 to use. Will create this if it doesn't exist and permissions allow.
+# s3_region: Region in s3 to use (for AWS S3)
+admin_username: HubAdministrator
+# admin_password: Admin password
+admin_password: 9vO075F5ZJ583nlK38py
+# rpm_source: Options are 'internet' or 'airgapped' for the source of the rpms. For airgapped please download all .rpm files to a rpms subdirectory.
+rpm_source: internet
+# rpmsdirectory: Location on the target machines.
+rpmsdirectory: /hubrpms
+# ca_certs: Options are 'internal', 'selfsigned' or 'supplied' for whether to generate internal certificates or sign the CSRs. Internal means the hub generates certificates and is recommended. Selfsigned means ansible with sign the certificates (this is only really for testing the 'supplied' variant). Supplied means you must sign the CSRs and supply the certificates - the job will pause for you to do this.
+ca_certs: selfsigned
+# ldap_enabled: Get ansible to configure ldap for you. See ldap.yaml to configure it.
+ldap_enabled: false
+# Passphrase for when we are selfsigining certificates only.
+secret_ca_passphrase: tzAXOUCix9Db9CFBAthja

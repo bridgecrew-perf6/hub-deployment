@@ -1,0 +1,6 @@
+- name: Add builtin wpsdev user
+  ansible.builtin.user:
+    name: wpsdev
+    home: /home/wpsdev
+    group: users
+    uid: 15003

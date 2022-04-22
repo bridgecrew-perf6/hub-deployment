@@ -1,0 +1,42 @@
+- hosts: hub
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Add Docker repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Enable repos
+      ini_file:
+        dest: /etc/yum.repos.d/docker-ce.repo
+        section: "{{ item }}"
+        option: enabled
+        value: 0
+      with_items: ['docker-ce-test', 'docker-ce-edge']
+
+    - name: Installing docker rpm files
+      yum:
+        name: ['lvm2', 'device-mapper-persistent-data', 'docker-ce']
+        state: latest
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Make ldap data dir
+      file:
+        path: /var/lib/ldap/data
+        state: directory
+
+    - name: Deploy openldap
+      community.docker.docker_container:
+        name: openldap
+        image: osixia/openldap:1.5.0 #1.2.4
+        ports:
+          - "389:389"
+        volumes:
+          - /var/lib/ldap/data:/var/lib/ldap/data
+        restart_policy: always

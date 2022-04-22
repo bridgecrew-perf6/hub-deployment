@@ -1,0 +1,4 @@
+webdav:
+  rootPaths:
+  - /home
+  - /transfer

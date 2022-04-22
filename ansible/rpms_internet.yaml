@@ -1,0 +1,6 @@
+- name: Add internet repository
+  yum_repository:
+    name: local
+    description: "Repo for rpms"
+    baseurl: "https://rpms.worldprogramming.com"
+    gpgcheck: no
