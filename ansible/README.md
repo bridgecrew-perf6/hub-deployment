@@ -9,6 +9,8 @@ To use it provide a hosts file and change the settings in the files in vars.
 
 You should have a pre-shared private key to log in to the hosts you're expecting to access or provide access mechanisms through the hosts file.
 
+Licenses: place a hub.txt and a setinit.wps in the license/ folder
+
 Then run all.sh or ansible-playbook main.yaml.
 
 ** Hosts example
