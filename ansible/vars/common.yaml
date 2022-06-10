@@ -4,6 +4,7 @@
 # db_name: Database name for database on postgresql server
 # db_user: User name for postgresql server
 # db_password: Password for user on postgresql server
+# s3_useIam: Whether to use IAM credentials to authenticate to S3.
 # s3_endpoint: Host name for s3 server for the hub
 # s3_accessKeyId: Access key for s3
 # s3_secretAccessKey: Secret for s3

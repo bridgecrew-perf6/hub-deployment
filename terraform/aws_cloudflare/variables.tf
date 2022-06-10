@@ -47,3 +47,8 @@ variable "setup_from_address_range" {
   description = "IP addresses to open for SSH, so ansible can talk to the VMs for step 2. In the form of 10.20.30.40/24"
 }
 
+variable "use_iam_for_s3" {
+  description = "Use iam policy for s3 access"
+  default = true
+}
+
