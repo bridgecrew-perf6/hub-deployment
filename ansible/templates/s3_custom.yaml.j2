@@ -2,14 +2,17 @@
 # defining the connection to an S3 compatible
 # object store
 s3:
+  # Whether to use IAM credentials to authenticate to S3.
+  useIam: {{ s3_useIam }}
+
   # The S3 endpoint to connect to.
   endpoint: {{ s3_endpoint }}
 
   # The AWS Access Key ID to use to authenticate the connection
-  accessKeyId: {{ s3_accessKeyId }}
+  accessKeyId: {{ s3_accessKeyId if (s3_useIam == false) else "dummy_value" }}
 
   # The AWS Secret Access Key to use to authenticate the connection
-  secretAccessKey: {{ s3_secretAccessKey }}
+  secretAccessKey: {{ s3_secretAccessKey if (s3_useIam == false) else "dummy_value" }}
 
   # The AWS Session Token to use to authenticate the connection
   token:

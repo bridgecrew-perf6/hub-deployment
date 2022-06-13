@@ -71,6 +71,7 @@ resource "aws_instance" "hub" {
     user = "${var.ssh_user_name}"
   }
   instance_type = "${var.hubvmsize}"
+  iam_instance_profile = var.use_iam_for_s3 == true ? "${aws_iam_instance_profile.s3_instance_profile[0].name}" : null
 
   # Lookup the correct AMI based on the region
   ami = "${data.aws_ami.centos.id}"
