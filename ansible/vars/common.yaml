@@ -18,7 +18,7 @@ rpm_source: internet
 # rpmsdirectory: Location on the target machines.
 rpmsdirectory: /hubrpms
 # ca_certs: Options are 'internal', 'selfsigned' or 'supplied' for whether to generate internal certificates or sign the CSRs. Internal means the hub generates certificates and is recommended. Selfsigned means ansible with sign the certificates (this is only really for testing the 'supplied' variant). Supplied means you must sign the CSRs and supply the certificates - the job will pause for you to do this.
-ca_certs: selfsigned
+ca_certs: internal
 # ldap_enabled: Get ansible to configure ldap for you. See ldap.yaml to configure it.
 ldap_enabled: false
 # Passphrase for when we are selfsigining certificates only.
