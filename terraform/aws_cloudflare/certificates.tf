@@ -6,7 +6,7 @@ resource "aws_acm_certificate" "lb" {
 }
 
 data "cloudflare_zone" "zone" {
-  name = var.cloudflare_zone
+  name = var.dns_zone
 }
 
 resource "cloudflare_record" "lb_validate" {
